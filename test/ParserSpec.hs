@@ -11,23 +11,9 @@ testParse parser = either (const Nothing) Just . parse parser "testInput"
 
 parserTests :: TestTree
 parserTests = testGroup "Parser Tests"
-  [ parenTests
-  , leafTests
+  [ leafTests
   , nodeTests
   ]
-
-parenTests :: TestTree
-parenTests = testGroup "Paren Tests"
-  [ testCase "1" $ testParen "(asdf)" @?= Just "asdf"
-  , testCase "2" $ testParen "[asdf]" @?= Just "asdf"
-  , testCase "3" $ testParen "{asdf}" @?= Just "asdf"
-  , testCase "4" $ testParen "(asdf" @?= Nothing
-  , testCase "5" $ testParen "(asdf]" @?= Nothing
-  , testCase "6" $ testParen "(asdf))" @?= Just "asdf"
-  , testCase "7" $ testParen "( asdf )" @?= Just "asdf"
-  ]
-  where
-    testParen = testParse (inParens (string "asdf"))
 
 leafTests :: TestTree
 leafTests = testGroup "Leaf Tests"
@@ -38,8 +24,15 @@ leafTests = testGroup "Leaf Tests"
 
 nodeTests :: TestTree
 nodeTests = testGroup "Node Tests"
-  [ testCase "1" $ testParse node "(a)" @?= Just (Node [Leaf "a"])
-  , testCase "2" $ testParse node "(a b)" @?= Just (Node [Leaf "a", Leaf "b"])
-  , testCase "3" $ testParse node "((a) [{b}])" @?=
+  [ testCase "1" $ testParse node "(asdf)" @?= Just (Node [Leaf "asdf"])
+  , testCase "2" $ testParse node "[asdf]" @?= Just (Node [Leaf "asdf"])
+  , testCase "3" $ testParse node "{asdf}" @?= Just (Node [Leaf "asdf"])
+  , testCase "4" $ testParse node "(asdf" @?= Nothing
+  , testCase "5" $ testParse node "(asdf]" @?= Nothing
+  , testCase "6" $ testParse node "(asdf))" @?= Just (Node [Leaf "asdf"])
+  , testCase "7" $ testParse node "( asdf )" @?= Just (Node [Leaf "asdf"])
+  , testCase "8" $ testParse node "(a b)" @?= Just (Node [Leaf "a", Leaf "b"])
+  , testCase "9" $ testParse node "((a) [{b}])" @?=
       Just (Node [Node [Leaf "a"], Node [Node [Leaf "b"]]])
+  , testCase "10" $ testParse node "( asdf )" @?= Just (Node [Leaf "asdf"])
   ]

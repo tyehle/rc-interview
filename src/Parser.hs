@@ -20,18 +20,15 @@ sexp = node <|> leaf
 
 
 node :: Parser SExp
-node = inParens (Node <$> sepBy1 sexp (many1 space))
+node = inParens (Node <$> many1 (sexp <* spaces))
+  where
+    inParens :: Parser a -> Parser a
+    inParens inner =  between (char '(') (char ')') (spaces *> inner)
+                  <|> between (char '[') (char ']') (spaces *> inner)
+                  <|> between (char '{') (char '}') (spaces *> inner)
 
 
 leaf :: Parser SExp
 leaf = Leaf <$> many1 (satisfy isAllowed)
   where
     isAllowed c = not (isSpace c || c `elem` "([{}])")
-
-
-inParens :: Parser a -> Parser a
-inParens inner =  between (char '(') (char ')') eatSpaces
-              <|> between (char '[') (char ']') eatSpaces
-              <|> between (char '{') (char '}') eatSpaces
-  where
-    eatSpaces = spaces *> inner <* spaces
