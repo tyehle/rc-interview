@@ -1,2 +1,8 @@
+import Test.Tasty
+
+import ParserSpec
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = defaultMain $ testGroup "Tests"
+  [ parserTests
+  ]

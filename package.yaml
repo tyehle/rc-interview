@@ -24,6 +24,8 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+  - parsec
 
 executables:
   rc-interview-exe:
@@ -46,3 +48,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - rc-interview
+    - tasty
+    - tasty-hunit
+    - parsec
