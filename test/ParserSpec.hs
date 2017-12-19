@@ -24,6 +24,7 @@ parenTests = testGroup "Paren Tests"
   , testCase "4" $ testParen "(asdf" @?= Nothing
   , testCase "5" $ testParen "(asdf]" @?= Nothing
   , testCase "6" $ testParen "(asdf))" @?= Just "asdf"
+  , testCase "7" $ testParen "( asdf )" @?= Just "asdf"
   ]
   where
     testParen = testParse (inParens (string "asdf"))

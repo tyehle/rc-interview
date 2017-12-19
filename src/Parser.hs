@@ -30,6 +30,8 @@ leaf = Leaf <$> many1 (satisfy isAllowed)
 
 
 inParens :: Parser a -> Parser a
-inParens inner =  between (char '(') (char ')') inner
-              <|> between (char '[') (char ']') inner
-              <|> between (char '{') (char '}') inner
+inParens inner =  between (char '(') (char ')') eatSpaces
+              <|> between (char '[') (char ']') eatSpaces
+              <|> between (char '{') (char '}') eatSpaces
+  where
+    eatSpaces = spaces *> inner <* spaces
